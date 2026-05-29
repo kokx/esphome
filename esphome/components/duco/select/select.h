@@ -50,5 +50,25 @@ class DucoSelect : public DucoDevice, public PollingComponent, public select::Se
   void control(const std::string &value) override;
 };
 
+class DucoBypassModeSelect : public DucoDevice, public PollingComponent, public select::Select {
+ public:
+  static const std::string MODE_AUTO;
+  static const std::string MODE_CLOSED;
+  static const std::string MODE_OPEN;
+
+  static const uint8_t MODE_CODE_AUTO = 0x00;
+  static const uint8_t MODE_CODE_CLOSED = 0x01;
+  static const uint8_t MODE_CODE_OPEN = 0x02;
+
+  void setup() override;
+  void update() override;
+
+  float get_setup_priority() const override;
+
+  void receive_response(const DucoMessage &message) override;
+
+  void control(const std::string &value) override;
+};
+
 }  // namespace duco
 }  // namespace esphome

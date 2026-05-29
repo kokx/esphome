@@ -156,5 +156,64 @@ void DucoSelect::control(const std::string &value) {
   this->parent_->send(message, this);
 }
 
+const std::string DucoBypassModeSelect::MODE_AUTO = "AUTO";
+const std::string DucoBypassModeSelect::MODE_CLOSED = "CLOSED";
+const std::string DucoBypassModeSelect::MODE_OPEN = "OPEN";
+
+void DucoBypassModeSelect::setup() {}
+
+void DucoBypassModeSelect::update() {
+  DucoMessage message;
+  message.function = 0x24;
+  message.data = {0x00, 0x10, 0x0a};
+  this->parent_->send(message, this);
+}
+
+float DucoBypassModeSelect::get_setup_priority() const {
+  // After DUCO
+  return setup_priority::BUS - 2.0f;
+}
+
+std::string bypass_mode_code_to_string(uint8_t mode) {
+  switch (mode) {
+    case DucoBypassModeSelect::MODE_CODE_CLOSED:
+      return DucoBypassModeSelect::MODE_CLOSED;
+    case DucoBypassModeSelect::MODE_CODE_OPEN:
+      return DucoBypassModeSelect::MODE_OPEN;
+    case DucoBypassModeSelect::MODE_CODE_AUTO:
+    default:
+      return DucoBypassModeSelect::MODE_AUTO;
+  }
+}
+
+uint8_t bypass_mode_string_to_code(const std::string &mode) {
+  if (mode == DucoBypassModeSelect::MODE_CLOSED) {
+    return DucoBypassModeSelect::MODE_CODE_CLOSED;
+  }
+  if (mode == DucoBypassModeSelect::MODE_OPEN) {
+    return DucoBypassModeSelect::MODE_CODE_OPEN;
+  }
+  return DucoBypassModeSelect::MODE_CODE_AUTO;
+}
+
+void DucoBypassModeSelect::receive_response(const DucoMessage &message) {
+  if (message.function == 0x26 && message.data.size() >= 4) {
+    uint8_t mode = message.data[3];
+    if (mode <= MODE_CODE_OPEN) {
+      publish_state(bypass_mode_code_to_string(mode));
+      ESP_LOGD(TAG, "Current bypass mode: %s", bypass_mode_code_to_string(mode).c_str());
+    }
+
+    this->parent_->stop_waiting(message.id);
+  }
+}
+
+void DucoBypassModeSelect::control(const std::string &value) {
+  DucoMessage message;
+  message.function = 0x24;
+  message.data = {0x01, 0x10, 0x0a, bypass_mode_string_to_code(value), 0x00, 0x00, 0x00};
+  this->parent_->send(message, this);
+}
+
 }  // namespace duco
 }  // namespace esphome
