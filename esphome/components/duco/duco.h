@@ -125,6 +125,7 @@ class DucoDiscovery : public DucoDevice, public PollingComponent {
   static const std::string NODE_TYPE_VLV;
   static const std::string NODE_TYPE_BOX;
   static const std::string NODE_TYPE_SWITCH;
+  static const std::string NODE_TYPE_RH_TEMP;
   static const std::string NODE_TYPE_UNKNOWN;
 
   static const uint8_t NODE_TYPE_CODE_UCBAT = 8;
@@ -134,6 +135,7 @@ class DucoDiscovery : public DucoDevice, public PollingComponent {
   static const uint8_t NODE_TYPE_CODE_VLV = 13;
   static const uint8_t NODE_TYPE_CODE_BOX = 17;
   static const uint8_t NODE_TYPE_CODE_SWITCH = 18;
+  static const uint8_t NODE_TYPE_RH_TEMP = 35;
 
  protected:
   // start with a delay of 1000 loops

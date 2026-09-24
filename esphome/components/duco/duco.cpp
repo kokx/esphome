@@ -178,6 +178,7 @@ const std::string DucoDiscovery::NODE_TYPE_UCCO2 = "UCCO2";
 const std::string DucoDiscovery::NODE_TYPE_VLV = "VLV";
 const std::string DucoDiscovery::NODE_TYPE_BOX = "BOX";
 const std::string DucoDiscovery::NODE_TYPE_SWITCH = "SWITCH";
+const std::string DucoDiscovery::NODE_TYPE_RH_TEMP = "RH_TEMP";
 const std::string DucoDiscovery::NODE_TYPE_UNKNOWN = "UNKNOWN";
 
 std::string friendly_node_type(uint8_t type_code) {
@@ -196,6 +197,8 @@ std::string friendly_node_type(uint8_t type_code) {
       return DucoDiscovery::NODE_TYPE_BOX;
     case DucoDiscovery::NODE_TYPE_CODE_SWITCH:
       return DucoDiscovery::NODE_TYPE_SWITCH;
+    case DucoDiscovery::NODE_TYPE_CODE_RH_TEMP:
+      return DucoDiscovery::NODE_TYPE_RH_TEMP;
     default:
       return DucoDiscovery::NODE_TYPE_UNKNOWN;
   }
